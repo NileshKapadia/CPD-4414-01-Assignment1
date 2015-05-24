@@ -6,20 +6,12 @@
 
 package Assignment1;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.google.gson.Gson;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Scanner;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 /**
  *
  * @author c0654874 
@@ -31,37 +23,11 @@ public class Assignment1 {
   static  String productname;
   static  int quantity;
    static  String notes;
-  
+ static String json;
    public static void seeOrders()
-{Scanner in= new Scanner(System.in);
-    JSONParser parser = new JSONParser();
- 
-	try {
- 
-		Object obj = parser.parse(new FileReader("c:\\test.json"));
- 
-		JSONObject jsonObject = (JSONObject) obj;
- 
-		String name = (String) jsonObject.get("orders");
-		System.out.println(name);
- 
-		
- 
-		// loop array
-		JSONArray msg = (JSONArray) jsonObject.get("orders");
-		Iterator<String> iterator = msg.iterator();
-		while (iterator.hasNext()) {
-			System.out.println(iterator.next());
-		}
- 
-	} catch (FileNotFoundException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
-	} catch (ParseException e) {
-		e.printStackTrace();
-	}
- 
+{
+    
+    System.out.printf(json);
      
  
 }
@@ -117,30 +83,34 @@ public static void placeOrders()
          System.out.println("We got some problem:" +e);
      }
         
- 
-	JSONObject obj = new JSONObject();
-	obj.put("notes", notes);
+ ArrayList<order> or = new ArrayList<order>();
+       order myorders=new order();
+       myorders.setCustomerID(custid);
+       myorders.setCustomerName(custname);
+       myorders.setProductID(productname);
+       myorders.setQuantity(quantity);
+       myorders.setNotes(notes);
+       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	   Date date = new Date();
+	   String dd= dateFormat.format(date); 
+       or.add(myorders);
+       
+       String json = new Gson().toJson(or);
+	
 	
  
-	JSONArray list = new JSONArray();
+	/*JSONArray list = new JSONArray();
 	list.add("customerId:" + custid);
 	list.add("customerName:" + custname);
 	list.add("product name:" + productname);
         list.add("quantity:" + quantity);
 	list.add("notes:" + notes);
  
-	obj.put("orders", list);
+	obj.put("orders", list);*/
+       
+       
  
-	try {
- 
-		FileWriter file = new FileWriter("c:\\test.json");
-		file.write(obj.toJSONString());
-		file.flush();
-		file.close();
- 
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
+	
 }
  
     /**
